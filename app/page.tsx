@@ -3,6 +3,7 @@
 import { Suspense, useEffect, useState } from "react"
 import { useRouter } from "next/navigation"
 import { DashboardHeader } from "@/components/dashboard-header"
+import { StatusOverview } from "@/components/status-overview"
 import { MetricsOverview } from "@/components/metrics-overview"
 import { EngagementCharts } from "@/components/engagement-charts"
 import { FeatureAdoption } from "@/components/feature-adoption"
@@ -33,13 +34,16 @@ export default function DashboardPage() {
       </div>
     )
   }
-  // </CHANGE>
 
   return (
     <div className="min-h-screen bg-background">
       <DashboardHeader />
 
       <main className="container mx-auto px-4 py-8 space-y-8">
+        <Suspense fallback={<LoadingSkeleton />}>
+          <StatusOverview />
+        </Suspense>
+
         <Suspense fallback={<LoadingSkeleton />}>
           <MetricsOverview />
         </Suspense>

@@ -1,7 +1,7 @@
 "use client"
 
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
-import { Users, TrendingUp, Download, Target, ArrowUp, ArrowDown } from "lucide-react"
+import { Users, TrendingUp, Download, Target, ArrowUp, ArrowDown, Minus } from "lucide-react"
 import useSWR from "swr"
 
 const fetcher = async () => {
@@ -77,7 +77,8 @@ export function MetricsOverview() {
       {cards.map((card) => {
         const Icon = card.icon
         const isPositive = card.trend === "up"
-        const TrendIcon = isPositive ? ArrowUp : ArrowDown
+        const isNeutral = card.changePercent === 0
+        const TrendIcon = isNeutral ? Minus : isPositive ? ArrowUp : ArrowDown
 
         return (
           <Card key={card.title} className="transition-all hover:shadow-lg">
@@ -86,22 +87,27 @@ export function MetricsOverview() {
               <Icon className="h-4 w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{card.value}</div>
-              <div className="flex items-center gap-2 mt-1">
+              <div className="text-3xl font-bold mb-2">{card.value}</div>
+
+              <div className="flex items-center gap-2 mb-2">
                 <div
-                  className={`flex items-center gap-1 text-sm font-medium ${
-                    isPositive ? "text-green-600 dark:text-green-400" : "text-red-600 dark:text-red-400"
+                  className={`flex items-center gap-1 text-base font-bold px-2 py-1 rounded ${
+                    isNeutral
+                      ? "text-muted-foreground bg-muted"
+                      : isPositive
+                        ? "text-green-600 dark:text-green-400 bg-green-50 dark:bg-green-950"
+                        : "text-red-600 dark:text-red-400 bg-red-50 dark:bg-red-950"
                   }`}
                 >
-                  <TrendIcon className="h-3 w-3" />
+                  <TrendIcon className="h-4 w-4" />
                   <span>{Math.abs(card.changePercent)}%</span>
                 </div>
-                <span className="text-xs text-muted-foreground">
+                <span className="text-sm font-medium text-muted-foreground">
                   ({isPositive ? "+" : ""}
                   {card.change.toLocaleString()})
                 </span>
               </div>
-              <p className="text-xs text-muted-foreground mt-1">{card.target}</p>
+              <p className="text-xs text-muted-foreground">{card.target}</p>
             </CardContent>
           </Card>
         )
